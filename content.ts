@@ -1,9 +1,15 @@
 import "./style.scss"
 import dayjs from "dayjs"
 import relativeTime from "dayjs/plugin/relativeTime"
+import timezone from "dayjs/plugin/timezone"
+import utc from "dayjs/plugin/utc"
 import "dayjs/locale/ja"
 
 dayjs.extend(relativeTime)
+dayjs.extend(utc)
+dayjs.extend(timezone)
+
+dayjs.tz.guess()
 
 const STATUS_TEXTS = {
   notSubmitted: "未提出",
@@ -36,7 +42,7 @@ let column_indexes = {
 }
 
 const classNameFromDiffDays = (diffDays: number): string | undefined =>
-  COLOR_THRESHOLDS.find(({ days }) => diffDays == days)?.className
+  COLOR_THRESHOLDS.find(({ days }) => diffDays <= days)?.className
 
 const colorizeManaba = () => {
 
@@ -75,7 +81,7 @@ const colorizeManaba = () => {
     }
 
     const deadlineText = columns[column_indexes.ENDS_AT].textContent
-    const deadline = dayjs(deadlineText)
+    const deadline = dayjs(deadlineText, "YYYY-MM-DD HH:mm")
 
     const now = dayjs()
 
@@ -83,7 +89,7 @@ const colorizeManaba = () => {
     row.classList.add(classNameFromDiffDays(diffDays))
 
     const daysLeftColumn = document.createElement("td")
-    daysLeftColumn.textContent = deadline.locale("ja").fromNow(true)
+    daysLeftColumn.textContent = `約${deadline.locale("ja").fromNow(true)}`
 
     row.append(daysLeftColumn)
   }

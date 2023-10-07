@@ -1,7 +1,7 @@
 {
   "name": "iroduku-manaba",
   "displayName": "Iroduku manaba",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "manabaの課題に期限に応じた色を付けます。",
   "scripts": {
     "dev": "plasmo dev",
