@@ -36,48 +36,57 @@ let column_indexes = {
 }
 
 const classNameFromDiffDays = (diffDays: number): string | undefined =>
-  COLOR_THRESHOLDS.find(({ days }) => diffDays < days)?.className
+  COLOR_THRESHOLDS.find(({ days }) => diffDays == days)?.className
 
-const titleRow = document.querySelector("table.stdlist > tbody > tr.title");
+const colorizeManaba = () => {
 
-for (const [idx, element] of Array.from(titleRow.children).entries()) {
-  element.removeAttribute("width");
+  const titleRow = document.querySelector("table.stdlist > tbody > tr.title");
 
-  const matchedKey = Object.keys(COLUMN_TITLES).find(key => COLUMN_TITLES[key] === element.textContent);
+  for (const [idx, element] of Array.from(titleRow.children).entries()) {
+    element.removeAttribute("width");
 
-  if (matchedKey) {
-    column_indexes[matchedKey] = idx;
-  }
-}
+    const matchedKey = Object.keys(COLUMN_TITLES).find(key => COLUMN_TITLES[key] === element.textContent);
 
-const daysLeftColumnTitle = document.createElement("th")
-daysLeftColumnTitle.textContent = "残り日数"
-
-titleRow.append(daysLeftColumnTitle)
-
-const rows = Array.from(document.querySelectorAll("table.stdlist > tbody > tr:is(.row0, .row1)"));
-
-for (const [idx, row] of rows.entries()) {
-  const columns = Array.from(row.children)
-
-  // 状態カラムが存在するページでは状態に応じて色をつける処理をスキップ
-  if (column_indexes.STATUS) {
-    const status = Array.from(columns[column_indexes.STATUS].childNodes).map((child) => child.textContent.trim()).filter(child => child != "")
-    if (!status.includes(STATUS_TEXTS.notSubmitted) || status.includes(STATUS_TEXTS.closed)) {
-      continue
+    if (matchedKey) {
+      column_indexes[matchedKey] = idx;
     }
   }
 
-  const deadlineText = columns[column_indexes.ENDS_AT].textContent
-  const deadline = dayjs(deadlineText)
+  if (!column_indexes.ENDS_AT) {
+    return
+  }
 
-  const now = dayjs()
+  const daysLeftColumnTitle = document.createElement("th")
+  daysLeftColumnTitle.textContent = "残り日数"
 
-  const diffDays = deadline.diff(now, "days")
-  row.classList.add(classNameFromDiffDays(diffDays))
+  titleRow.append(daysLeftColumnTitle)
 
-  const daysLeftColumn = document.createElement("td")
-  daysLeftColumn.textContent = deadline.locale("ja").fromNow(true)
+  const rows = Array.from(document.querySelectorAll("table.stdlist > tbody > tr:is(.row0, .row1)"));
 
-  row.append(daysLeftColumn)
+  for (const [idx, row] of rows.entries()) {
+    const columns = Array.from(row.children)
+
+    // 状態カラムが存在するページでは状態に応じて色をつける処理をスキップ
+    if (column_indexes.STATUS) {
+      const status = Array.from(columns[column_indexes.STATUS].childNodes).map((child) => child.textContent.trim()).filter(child => child != "")
+      if (!status.includes(STATUS_TEXTS.notSubmitted) || status.includes(STATUS_TEXTS.closed)) {
+        continue
+      }
+    }
+
+    const deadlineText = columns[column_indexes.ENDS_AT].textContent
+    const deadline = dayjs(deadlineText)
+
+    const now = dayjs()
+
+    const diffDays = deadline.diff(now, "days")
+    row.classList.add(classNameFromDiffDays(diffDays))
+
+    const daysLeftColumn = document.createElement("td")
+    daysLeftColumn.textContent = deadline.locale("ja").fromNow(true)
+
+    row.append(daysLeftColumn)
+  }
 }
+
+colorizeManaba()
