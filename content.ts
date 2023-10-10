@@ -85,7 +85,7 @@ const colorizeManaba = () => {
 
     const now = dayjs()
 
-    const diffDays = deadline.diff(now, "days")
+    const diffDays = deadline.diff(now, "days", true)
     row.classList.add(classNameFromDiffDays(diffDays))
 
     const daysLeftColumn = document.createElement("td")
