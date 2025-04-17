@@ -17,12 +17,12 @@ jobs:
 
       - name: Zip extensions
         run: |
-          npm zip
-          # npm zip:firefox
+          npm run zip
+          # npm run zip:firefox
 
       - name: Submit to stores
         run: |
-          npm wxt submit \
+          npx wxt submit \
             --chrome-zip .output/*-chrome.zip \
             # --firefox-zip .output/*-firefox.zip --firefox-sources-zip .output/*-sources.zip
         env:
