@@ -1,11 +1,8 @@
 import { defineConfig } from "wxt";
-import react from "@vitejs/plugin-react";
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
-  vite: () => ({
-    plugins: [react()],
-  }),
+  modules: ["@wxt-dev/module-react"],
   manifest: {
     name: "iroduku manaba",
     host_permissions: ["https://manaba.tsukuba.ac.jp/*"],
