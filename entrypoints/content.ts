@@ -77,21 +77,13 @@ const colorizeManaba = () => {
   titleRow.append(daysLeftColumnTitle);
 
   const rows = Array.from(
-    document.querySelectorAll("table.stdlist > tbody > tr:is(.row0, .row1)")
+    document.querySelectorAll(
+      "table.stdlist > tbody > tr:is(.row0, .row1, .row)"
+    )
   );
 
   rows.forEach((row) => {
     const columns = Array.from(row.children);
-
-    if (column_indexes.STATUS) {
-      const statusText = columns[column_indexes.STATUS]?.textContent?.trim();
-      if (
-        statusText === STATUS_TEXTS.notSubmitted ||
-        statusText === STATUS_TEXTS.closed
-      ) {
-        return;
-      }
-    }
 
     const deadlineText = column_indexes.ENDS_AT
       ? columns[column_indexes.ENDS_AT]?.textContent
@@ -107,7 +99,27 @@ const colorizeManaba = () => {
       row.classList.add(className);
     }
 
+    if (column_indexes.STATUS) {
+      const statusEl = columns[column_indexes.STATUS];
+      if (statusEl) {
+        statusEl;
+      }
+
+      const statusTexts = Array.from(statusEl.children).map((el) =>
+        el.textContent?.trim()
+      );
+
+      if (statusTexts.includes(STATUS_TEXTS.closed)) {
+        // 見た目を合わせるためにダミーの要素
+        const daysLeftColumn = document.createElement("td");
+        daysLeftColumn.setAttribute("class", "border center");
+        row.append(daysLeftColumn);
+        return;
+      }
+    }
+
     const daysLeftColumn = document.createElement("td");
+    daysLeftColumn.setAttribute("class", "border center");
     daysLeftColumn.textContent = `約${formatDistanceToNowStrict(deadline, {
       locale: ja,
       addSuffix: true,
