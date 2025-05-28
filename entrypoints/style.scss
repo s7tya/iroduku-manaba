@@ -4,7 +4,7 @@ $yellow-bg: #fff0c2;
 $green-bg: #d3ebd3;
 
 
-table.stdlist>tbody>tr:is(.row0, .row1) {
+table.stdlist>tbody>tr:is(.row0, .row1, .row) {
   &.seven-days-left {
     background-color: $green-bg !important;
 

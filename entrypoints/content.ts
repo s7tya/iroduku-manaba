@@ -24,6 +24,7 @@ interface ColumnIndexes {
 }
 
 const STATUS_TEXTS = {
+  submitted: "提出済み",
   notSubmitted: "未提出",
   closed: "受付終了",
 };
@@ -88,26 +89,40 @@ const colorizeManaba = () => {
     const deadlineText = column_indexes.ENDS_AT
       ? columns[column_indexes.ENDS_AT]?.textContent
       : undefined;
-    if (!deadlineText) return;
+    if (!deadlineText) {
+      const daysLeftColumn = document.createElement("td");
+      daysLeftColumn.setAttribute("class", "border center");
+      row.append(daysLeftColumn);
+      return;
+    }
 
     const deadline = parseISO(deadlineText);
     const now = new Date();
     const diffDays = differenceInDays(deadline, now);
 
     const className = classNameFromDiffDays(diffDays);
-    if (className) {
-      row.classList.add(className);
-    }
 
     if (column_indexes.STATUS) {
       const statusEl = columns[column_indexes.STATUS];
-      if (statusEl) {
-        statusEl;
+      if (!statusEl) {
+        return;
       }
 
-      const statusTexts = Array.from(statusEl.children).map((el) =>
-        el.textContent?.trim()
-      );
+      const rawStatusTexts = statusEl.textContent?.split(/\s/);
+      if (!rawStatusTexts) {
+        return;
+      }
+
+      const statusTexts = rawStatusTexts.filter((x) => x.trim() !== "");
+
+      // n-days-left のクラス付与
+      if (
+        !statusTexts.includes(STATUS_TEXTS.closed) &&
+        !statusTexts.includes(STATUS_TEXTS.submitted) &&
+        className
+      ) {
+        row.classList.add(className);
+      }
 
       if (statusTexts.includes(STATUS_TEXTS.closed)) {
         // 見た目を合わせるためにダミーの要素
@@ -115,6 +130,11 @@ const colorizeManaba = () => {
         daysLeftColumn.setAttribute("class", "border center");
         row.append(daysLeftColumn);
         return;
+      }
+    } else {
+      // n-days-left のクラス付与
+      if (className) {
+        row.classList.add(className);
       }
     }
 
