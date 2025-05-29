@@ -1,58 +1,34 @@
-@use "sass:color";
 $red-bg: #ffdce0;
 $yellow-bg: #fff0c2;
 $green-bg: #d3ebd3;
 
+$statuses: (
+  seven-days-left : $green-bg,
+  three-days-left : $yellow-bg,
+  one-day-left : $red-bg,
+);
+
+@mixin status-row($name, $color) {
+  &.#{$name} {
+    background-color: $color !important;
+
+    &:hover,
+    &.hilitecolor td {
+      background-color: color-mix(in srgb, #{$color} 98%, black 2%) !important;
+    }
+
+    &.row1 {
+      background-color: color-mix(in srgb, #{$color} 98%, white 2%) !important;
+    }
+
+    a {
+      color: color-mix(in srgb, #{$color} 25%, black 75%) !important;
+    }
+  }
+}
 
 table.stdlist>tbody>tr:is(.row0, .row1, .row) {
-  &.seven-days-left {
-    background-color: $green-bg !important;
-
-    &:hover,
-    &.hilitecolor td {
-      background-color: color.adjust($green-bg, $lightness: -2%) !important;
-    }
-
-    &.row1 {
-      background-color: color.adjust($green-bg, $lightness: 2%) !important;
-    }
-
-    a {
-      color: color.adjust($green-bg, $lightness: -75%) !important;
-    }
-  }
-
-  &.three-days-left {
-    background-color: $yellow-bg !important;
-
-    &:hover,
-    &.hilitecolor td {
-      background-color: color.adjust($yellow-bg, $lightness: -2%) !important;
-    }
-
-    &.row1 {
-      background-color: color.adjust($yellow-bg, $lightness: 2%) !important;
-    }
-
-    a {
-      color: color.adjust($yellow-bg, $lightness: -75%) !important;
-    }
-  }
-
-  &.one-day-left {
-    background-color: $red-bg !important;
-
-    &:hover,
-    &.hilitecolor td {
-      background-color: color.adjust($red-bg, $lightness: -2%) !important;
-    }
-
-    &.row1 {
-      background-color: color.adjust($red-bg, $lightness: 2%) !important;
-    }
-
-    a {
-      color: color.adjust($red-bg, $lightness: -75%) !important;
-    }
+  @each $name, $color in $statuses {
+    @include status-row($name, $color);
   }
 }
