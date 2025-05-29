@@ -27,6 +27,7 @@ const STATUS_TEXTS = {
   submitted: "提出済み",
   notSubmitted: "未提出",
   closed: "受付終了",
+  upcoming: "受付開始待ち",
 };
 
 const COLOR_THRESHOLDS: {
@@ -119,9 +120,15 @@ const colorizeManaba = () => {
       if (
         !statusTexts.includes(STATUS_TEXTS.closed) &&
         !statusTexts.includes(STATUS_TEXTS.submitted) &&
+        !statusTexts.includes(STATUS_TEXTS.upcoming) &&
         className
       ) {
         row.classList.add(className);
+      }
+
+      // 受付終了のを暗く
+      if (statusTexts.includes(STATUS_TEXTS.closed)) {
+        row.classList.add("closed");
       }
 
       if (statusTexts.includes(STATUS_TEXTS.closed)) {

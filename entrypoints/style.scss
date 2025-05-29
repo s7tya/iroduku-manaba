@@ -1,11 +1,13 @@
 $red-bg: #ffdce0;
 $yellow-bg: #fff0c2;
 $green-bg: #d3ebd3;
+$gray-bg: #d3d3d3;
 
 $statuses: (
   seven-days-left : $green-bg,
   three-days-left : $yellow-bg,
   one-day-left : $red-bg,
+  closed: $gray-bg,
 );
 
 @mixin status-row($name, $color) {

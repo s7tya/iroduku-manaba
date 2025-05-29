@@ -2,7 +2,7 @@
   "name": "iroduku-manaba",
   "description": "manabaの課題に期限に応じた色を付けます。",
   "private": true,
-  "version": "0.0.7",
+  "version": "0.0.8",
   "type": "module",
   "scripts": {
     "dev": "wxt",
